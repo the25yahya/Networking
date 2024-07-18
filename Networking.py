@@ -37,17 +37,39 @@ class tcpClient:
 
 
 class tcpServer:
-    def __init__(self,ip,port,clients=int) :
+    def __init__(self,ip,port,clients) :
         self.ip = ip
-        self.port = port
-        self.clients = clients
+        self.port = int(port)
+        self.clients = int(clients)
+        self.server_socket = None
+        self.threads = []
     
-    def server(self):
-        server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        server.bind((self.ip,self.port))
-        server.listen(self.clients)
+    def start_server(self):
+        self.server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.server_socket.bind((self.ip,self.port))
+        self.server_socket.listen(self.clients)
         print(f"[*] started tcp server at {self.ip}:{self.port}")
 
+        def handle_client(client):
+            with client_socket:   
+                while True:
+                    try:
+                      data = client.recv(1024)
+                      if not data:
+                          break
+                      print(f"[*] received data : {data.decode("utf-8")}")
+                      self.server_socket.sendall(data)
+                    except socket.error as e:
+                        print(f"[*] error handling client : {e}")
+        while True :
+            try:
+                client_socket, client_adress = self.server_socket.accept()
+                print(f"[*] accepted connection from : {client_adress[0]}:{client_adress[1]}")
+                client_handler = threading.Thread(target=handle_client,args=(client_socket,))
+                client_handler.start()
+                self.threads.append(client_handler)
+            except socket.error as e :
+                print(f"[*] error accepting connection: {e}")
 
 class udpClient:
     def __init__(self,ip,port) :

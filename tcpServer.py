@@ -5,7 +5,7 @@ from sys import argv
 script,IP,PORT = argv
 
 def main():
-    server = socket.socket((socket.AF_INET,socket.SOCK_STREAM))
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     server.bind((IP,PORT))
     server.listen(5)
     print(f"[*] LISTENNING ON {IP}:{PORT}")
