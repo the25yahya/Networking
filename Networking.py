@@ -70,6 +70,14 @@ class tcpServer:
                 self.threads.append(client_handler)
             except socket.error as e :
                 print(f"[*] error accepting connection: {e}")
+    
+    def close_server(self):
+        if self.server_socket:
+            self.server_socket.close()
+            self.server_socket = None
+            print(f"[*] server at {self.ip}:{self.port} closed")
+        for t in self.threads:
+            t.join()
 
 class udpClient:
     def __init__(self,ip,port) :
