@@ -37,7 +37,7 @@ class tcpClient:
 
 
 class tcpServer:
-    def __init__(self,ip,port,clients) :
+    def __init__(self,ip,port,clients):
         self.ip = ip
         self.port = int(port)
         self.clients = int(clients)
@@ -57,7 +57,7 @@ class tcpServer:
                       data = client.recv(1024)
                       if not data:
                           break
-                      print(f"[*] received data : {data.decode("utf-8")}")
+                      print(f"[*] received data : {data}")
                       self.server_socket.sendall(data)
                     except socket.error as e:
                         print(f"[*] error handling client : {e}")
